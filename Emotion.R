@@ -2,7 +2,10 @@
 boston_sent <- Boston_final %>%
   inner_join(get_sentiments("nrc"))
 
-###NRC (via package install.)
-install.packages("devtools")
-install.packages("C:/Users/Bovan/Downloads/NRC-Emotion-Intensity-Lexicon.zip", repos=NULL, type='source')
-install.packages("C:/Users/Bovan/Downloads/NRC-Emotion-Lexicon.zip", repos=NULL, type='source')
+###NRC (via gettext)
+library(textdata)
+
+emolex_lexicon <- lexicon_nrc()
+nrceil_lexicon <- lexicon_nrc_eil()
+
+###NRC(via install package)

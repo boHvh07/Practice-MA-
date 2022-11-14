@@ -46,8 +46,14 @@ boston_sent4 <- boston_final %>%
 
 boston_sent5 <- boston_sent4 %>%
   group_by(review_num) %>%
-  summarise(avgang = mean(anger), avgant = mean(anticipation), avgjoy = mean(joy), avgsad = mean(sadness), avgdis = mean(disgust), avgfear = mean(fear), avgtrust = mean(trust), avgsurp = mean(surprise)) 
+  summarise(avgang = mean(anger, na.rm=T), avgant = mean(anticipation, na.rm=T), avgjoy = mean(joy, na.rm=T), avgsad = mean(sadness, na.rm=T),
+            avgdis = mean(disgust, na.rm=T), avgfear = mean(fear, na.rm=T), avgtrust = mean(trust, na.rm=T), avgsurp = mean(surprise, na.rm=T))
 
 
+### Join with original dataset for analysis
+bostontest2 <- boston_test %>%
+  rename("review_num"="...1")
+bostonjoin = subset(bostontest2, select = -c(Review, review, review2))
 
-
+Bostonana <- bostonjoin %>%
+  inner_join(boston_sent5, by = "review_num")

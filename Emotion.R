@@ -39,14 +39,14 @@ boston_sent2 <- boston_final%>%
   group_by(review_num) #group by for sentence polarity
 
   
-  
 ###NRCEIL
 
 boston_sent4 <- boston_final %>%
-  inner_join(nrceil2, by = "word") %>%
-  group_by(review_num)
+  inner_join(nrceil2, by = "word") 
 
-
+boston_sent5 <- boston_sent4 %>%
+  group_by(review_num) %>%
+  summarise(avgang = mean(anger), avgant = mean(anticipation), avgjoy = mean(joy), avgsad = mean(sadness), avgdis = mean(disgust), avgfear = mean(fear), avgtrust = mean(trust), avgsurp = mean(surprise)) 
 
 
 

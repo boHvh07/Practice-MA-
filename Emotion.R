@@ -38,7 +38,7 @@ boston_sent2 <- boston_final%>%
   inner_join(emolex, by = "word") %>% # inner join with our lexicon to get the polarity score
   group_by(review_num) #group by for sentence polarity
 
-  
+
 ###NRCEIL
 
 boston_sent4 <- boston_final %>%

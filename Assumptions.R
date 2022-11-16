@@ -24,7 +24,7 @@ plot(bostonlm)
 
 ###ASSUMPTION 5: Homoskedacity and no Autocorrelation 
 
-library(car)
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
 ### Assumption 1: Error term = 0

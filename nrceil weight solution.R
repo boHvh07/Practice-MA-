@@ -8,6 +8,13 @@ Bostonana <- bostonjoin %>%
   inner_join(boston_perc, by = "review_num")
 
 #changed all of them???/
-boston_perc$avgang[is.nan(boston_perc$avgang)]<- NA
+#boston_perc$avgang[is.nan(boston_perc$avgang)]<- NA
 
-boston_perc$sum <- sum('avgang' + 'avgant' + ......)
+boston_perc$sum = rowSums(boston_perc[,c(2:9)]) 
+
+#data fixed to show proportion of each emotion per review
+library(dplyr)
+boston_perc2 <- boston_perc %>% rowwise() %>% mutate(ang = avgang/sum, ant = avgant/sum, joy = avgjoy/sum, sad = avgsad/sum, 
+                                                     dis = avgdis/sum, fear = avgfear/sum, trust = avgtrust/sum, surp = avgsurp/sum)   
+                                                     
+  

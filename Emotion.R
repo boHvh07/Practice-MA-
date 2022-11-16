@@ -44,6 +44,7 @@ boston_sent2 <- boston_final%>%
 boston_sent4 <- boston_final %>%
   inner_join(nrceil2, by = "word") 
 
+
 boston_sent5 <- boston_sent4 %>%
   group_by(review_num) %>%
   summarise(avgang = mean(anger, na.rm=T), avgant = mean(anticipation, na.rm=T), avgjoy = mean(joy, na.rm=T), avgsad = mean(sadness, na.rm=T),

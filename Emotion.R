@@ -34,27 +34,30 @@ nrceil2 <- nrceil %>%
 
 
 ###Emolex (unnecesary)
-boston_sent2 <- boston_final%>%
+boston_emo <- boston_final%>%
   inner_join(emolex, by = "word") %>% # inner join with our lexicon to get the polarity score
   group_by(review_num) #group by for sentence polarity
 
 
 ###NRCEIL
 
-boston_sent4 <- boston_final %>%
+boston_sent1 <- boston_final %>%
   inner_join(nrceil2, by = "word") 
 
-
-boston_sent5 <- boston_sent4 %>%
+boston_perc <- boston_sent1 %>%
   group_by(review_num) %>%
-  summarise(avgang = mean(anger, na.rm=T), avgant = mean(anticipation, na.rm=T), avgjoy = mean(joy, na.rm=T), avgsad = mean(sadness, na.rm=T),
-            avgdis = mean(disgust, na.rm=T), avgfear = mean(fear, na.rm=T), avgtrust = mean(trust, na.rm=T), avgsurp = mean(surprise, na.rm=T))
+  summarise(avgang = sum(anger, na.rm=T), avgant = sum(anticipation, na.rm=T), avgjoy = sum(joy, na.rm=T), avgsad = sum(sadness, na.rm=T),
+            avgdis = sum(disgust, na.rm=T), avgfear = sum(fear, na.rm=T), avgtrust = sum(trust, na.rm=T), avgsurp = sum(surprise, na.rm=T))
+
+boston_perc$sum = rowSums(boston_perc[,c(2:9)]) 
+
+library(dplyr)
+boston_perc2 <- boston_perc %>% rowwise() %>% mutate(ang = avgang/sum, ant = avgant/sum, joy = avgjoy/sum, sad = avgsad/sum, 
+                                                     dis = avgdis/sum, fear = avgfear/sum, trust = avgtrust/sum, surp = avgsurp/sum)   
 
 
 ### Join with original dataset for analysis
-bostontest2 <- boston_test %>%
-  rename("review_num"="...1")
-bostonjoin = subset(bostontest2, select = -c(Review, review, review2))
+bostonjoin = subset(bostontest, select = -c(Review, review, review2))
 
 Bostonana <- bostonjoin %>%
-  inner_join(boston_sent5, by = "review_num")
+  inner_join(boston_perc, by = "review_num")

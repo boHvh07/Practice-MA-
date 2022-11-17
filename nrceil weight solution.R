@@ -17,4 +17,3 @@ library(dplyr)
 boston_perc2 <- boston_perc %>% rowwise() %>% mutate(ang = avgang/sum, ant = avgant/sum, joy = avgjoy/sum, sad = avgsad/sum, 
                                                      dis = avgdis/sum, fear = avgfear/sum, trust = avgtrust/sum, surp = avgsurp/sum)   
                                                      
-  

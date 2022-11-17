@@ -2,6 +2,8 @@
 
 library(tidytext)
 library(tidyverse)
+boston_test <- boston_test %>%
+  rename("review_num"="...1")
 
 #Remove numbers from text
 boston_test$review <- removeNumbers(boston_test$Review)
@@ -23,4 +25,4 @@ boston_word3$lemma <- lemmatize_words(boston_word3$word)
 
 Boston_final = subset(boston_word3, select = -c(Review, review, word))
 boston_final <- Boston_final %>%
-  rename("word"="lemma", "review_num"="...1")
+  rename("word"="lemma")

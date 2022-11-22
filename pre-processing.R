@@ -2,27 +2,27 @@
 
 library(tidytext)
 library(tidyverse)
-boston_test <- boston_test %>%
+library(tm)
+library(dplyr)
+library(textstem)
+###dataset 
+city <- bostonmerge
+
+city <- city %>%
   rename("review_num"="...1")
 
 #Remove numbers from text
-boston_test$review <- removeNumbers(boston_test$Review)
+city$review <- removeNumbers(city$Review)
 
 #Tokenize the words (unnest also removes punctuation and lowercases all words)
-boston_word <- boston_test %>%
-  unnest_tokens("word", "review2")
+city_word <- city %>%
+  unnest_tokens("word", "review")
 
 ###Step 3 Stop Words
-library(dplyr)
-
-boston_word2 <- boston_word %>%
+city_word2 <- city_word %>%
   anti_join(stop_words)
 
 ### Step 4 Lemmatization
-library(textstem)
+city_word2$lemma <- lemmatize_words(city_word2$word)
 
-boston_word3$lemma <- lemmatize_words(boston_word3$word)
-
-Boston_final = subset(boston_word3, select = -c(Review, review, word))
-boston_final <- Boston_final %>%
-  rename("word"="lemma")
+city_final = subset(city_word2, select = -c(Review))

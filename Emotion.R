@@ -58,6 +58,5 @@ city_perc2 <- city_perc %>% rowwise() %>% mutate(ang = avgang/sum, ant = avgant/
 ### Join with original dataset for analysis
 cityjoin = subset(city, select = -c(Review, review))
 
-### Change 'city' of 'cityana' to the respective city of analysis
 cityana <- cityjoin %>%
   inner_join(city_perc2, by = "review_num")

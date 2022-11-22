@@ -1,17 +1,17 @@
 library(ggplot2)
 library(stargazer)
 
-bostonlm <- lm(Bostonana$Rating ~ Bostonana$avgang + Bostonana$avgant + Bostonana$avgdis + Bostonana$avgjoy + Bostonana$avgsad
-               + Bostonana$avgfear + Bostonana$avgtrust + Bostonana$avgsurp)
+citylm <- lm(cityana$Rating ~ cityana$avgang + cityana$avgant + cityana$avgdis + cityana$avgjoy + cityana$avgsad
+               + cityana$avgfear + cityana$avgtrust + cityana$avgsurp + cityana$reviews_seen + cityana$rating_seen)
 stargazer(bostonlm)
 ###ASSUMPTION 1: Linearity
-plot(bostonlm, which = 1)
-plot(bostonlm, which = 2)
-plot(bostonlm, which = 3)
-plot(bostonlm, which = 5)
+plot(citylm, which = 1)
+plot(citylm, which = 2)
+plot(citylm, which = 3)
+plot(citylm, which = 5)
 
 par(mfrow=c(2,2))
-plot(bostonlm)
+plot(citylm)
 ###ASSUMPTION 2: random sampling of observations
 
 

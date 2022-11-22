@@ -40,14 +40,13 @@ plot_rating %>%
 
 plot_rating_tf <- plot_rating %>% 
   group_by(Rating) %>% 
-  slice_max(tf_idf, n = 15) %>% 
+  slice_max(tf_idf, n = 10) %>% 
   ungroup() %>%
   mutate(word = reorder(word, tf_idf)) %>%
   ggplot(aes(tf_idf, word, fill = Rating)) +
   geom_col(show.legend = FALSE) +
   labs(x = "tf-idf", y = NULL) +
   facet_wrap(~Rating, ncol = 2, scales = "free")
-plot_rating_tf
 
 
 ### OLS regression

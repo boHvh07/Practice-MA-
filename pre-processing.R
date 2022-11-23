@@ -6,11 +6,14 @@ library(tm)
 library(dplyr)
 library(textstem)
 ###dataset 
+
 city <- bostonmerge
 city$city <- 'Boston'
 
 city <- city %>%
-  rename("review_num"="...1")
+  rename("review_seen"="...1")
+
+city = subset(city, select = -c(2, 7))
 
 #Remove numbers from text
 city$review <- removeNumbers(city$Review)

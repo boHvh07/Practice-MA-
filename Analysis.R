@@ -1,4 +1,5 @@
 library(tidytext)
+library(tidyverse)
 https://www.tidytextmining.com/tfidf.html
 
 city_2 = subset(city_word2, select = -c(word))
@@ -47,41 +48,28 @@ plot_rating_tf <- plot_rating %>%
   geom_col(show.legend = FALSE) +
   labs(x = "tf-idf", y = NULL) +
   facet_wrap(~Rating, ncol = 2, scales = "free")
-
+plot_rating_tf
 
 ### OLS regression
+library(olsrr)
+
+summary(cityana)
+
+ols_regress(Rating ~ ang + rating_seen + rating_seen*ang + review_seen + review_seen*ang, data = cityana)
+ols_regress(Rating ~ ant + rating_seen + rating_seen*ant + review_seen + review_seen*ant, data = cityana)
+ols_regress(Rating ~ joy + rating_seen + rating_seen*joy + review_seen + review_seen*joy, data = cityana)
+ols_regress(Rating ~ sad + rating_seen + rating_seen*sad + review_seen + review_seen*sad, data = cityana)
+ols_regress(Rating ~ dis + rating_seen + rating_seen*dis + review_seen + review_seen*dis, data = cityana)
+ols_regress(Rating ~ fear + rating_seen + rating_seen*fear + review_seen + review_seen*fear, data = cityana)
+ols_regress(Rating ~ trust + rating_seen + rating_seen*trust + review_seen + review_seen*trust, data = cityana)
+ols_regress(Rating ~ surp + rating_seen + rating_seen*surp + review_seen + review_seen*surp, data = cityana)
+
+ols_regress(Rating ~ ang + rating_seen + rating_seen*ang + review_seen + review_seen*ang +
+              ant + rating_seen*ant + review_seen*ant + joy + rating_seen*joy + review_seen*joy +
+              sad + rating_seen*sad + review_seen*sad + dis + rating_seen*dis + review_seen*dis +
+              fear + rating_seen*fear + review_seen*fear + trust + rating_seen*trust + review_seen*trust +
+              surp + rating_seen*surp + review_seen*surp
+            , data = cityana)
 
 
-### Moderation analysis using Lavaan
-Model 4: First-Stage Moderation
-#-------------------------------------------------------------------------------\n")
-library(haven)      # Read and write Stata, SPSS, or SAS data file 
-library(lavaan)     # LAtent VAriable ANalysis 
-library(semPlot)
-
-model.4 <- "                                   
-m1 ~ a1*x + a2*w + a3*xw  
-y  ~ b1*m1 + b2*w + b3*xw + cp*x   
-a1b1           := a1*b1               # Indirect effect of x on y via m
-a3b1           := a3*b1               # Conditional indirect effect of xw on y 
-cprime         := cp                  # Conditional direct effect of x on y
-total          := a1*b1 + a3*b1 + cp  # Total effect of x on y
-"
-moderation.1 <- sem(model.4, data=data, se="bootstrap", bootstrap = 1000)  
-summary(moderation.1, ci=T, standardized=T, rsquare=T, fit.measures=F) 
-
-cat(
-
-semPaths(mediation.1,              # Diagram of mediation.1
-         whatLabels = "name",      # "name" of the path. Other options "est" (estimates) or "stand" (standardized est)
-         rotation = 2,             # Rotation = 2 locates X on the left of the diagram
-         asize = 5,                # Arrow-head size
-         sizeMan=10,               # Size of boxes
-         edge.label.position=.65,  # Relative position of label on arrow. Default = .5
-         edge.label.cex=1.5,       # Size of labels on the paths (= edges,
-         residuals = FALSE)        # Hide residuals to reduce visual clutter
-         
-semPaths(moderation.1,whatLabels="est",rotation=2,asize=5,sizeMan=10,
-         edge.label.position=.65, edge.label.cex=1.5, residuals = FALSE) 
-
-### Post test?
+### Post test (same but with all reviews of certain restaurants)

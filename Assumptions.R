@@ -6,6 +6,10 @@ citylmnon <- lm(cityana$Rating ~ cityana$avgang + cityana$avgant + cityana$avgdi
                + cityana$avgfear + cityana$avgtrust + cityana$avgsurp + cityana$review_seen + cityana$rating_seen, 
                data = cityana)
 
+citylmnon2 <- lm(cityana$Rating ~ cityana$avgang + cityana$avgant + cityana$avgdis + cityana$avgjoy + cityana$avgsad
+                + cityana$avgfear + cityana$avgtrust + cityana$avgsurp + cityana$review_seen + cityana$rating_seen, 
+                data = cityana)
+
 citylm <- lm(Rating ~ ang + rating_seen + rating_seen*ang + review_seen + review_seen*ang +
                ant + rating_seen*ant + review_seen*ant + joy + rating_seen*joy + review_seen*joy +
                sad + rating_seen*sad + review_seen*sad + dis + rating_seen*dis + review_seen*dis +
@@ -33,20 +37,20 @@ citylm2 <- lm(Rating ~ ang + rating_seen + rating_seen*ang + review_seen + revie
                    fear + rating_seen*fear + review_seen*fear + trust + rating_seen*trust + review_seen*trust +
                    surp + rating_seen*surp + review_seen*surp
                  , data = cityana_without_outliers)
+
+### Remove outliers
 ols_plot_cooksd_chart(citylm2, print_plot = T)
 summary(citylm2)
 ###ASSUMPTION 1: Linearity
-plot(citylm, which = 1)
+plot(citylm2, which = 1)
 
 
-###ASSUMPTION 2: independence of residual values (Durbin-Watson test)
+\###ASSUMPTION 2: independence of residual values (Durbin-Watson test)
 library(lmtest)
 dwtest(formula = citylm2, alternative = "two.sided")
 
-###ASSUMPTION 3: Conditional mean should be zero
 
-
-###ASSUMPTION 4: No Multicollinearity (variance of inflation (VIF))
+\###ASSUMPTION 3: No Multicollinearity (variance of inflation (VIF))
 library(car)
 vif(citylmnon)
 
@@ -59,23 +63,20 @@ citycor <- cityana_without_outliers[ ,c('Rating', 'avgang', 'avgant', 'avgdis', 
                                       , 'avgfear', 'avgtrust', 'avgsurp', 'review_seen', 'rating_seen')]
 cor(citycor, use = 'complete.obs')
 
-###ASSUMPTION 5: Homoskedacity and no Autocorrelation (plot variance of residuals)
+###ASSUMPTION 4: Homoskedacity and no Autocorrelation (plot variance of residuals) = Will be violated
 plot(citylm2, which = 1)
 plot(citylm2, which = 3)
 
-### Normality of residuals??? (kolmogorov-Smirnov and Shapiro-Wilk)
+###ASSUMPTION 5 Normality of residuals (kolmogorov-Smirnov and Shapiro-Wilk)
 hist(citylm2$residuals)
+plot(citylm2, which = 1)
 plot(citylm2, which = 2)
 
-ks.test(cityana_without_outliers, 'pnorm')
-
-library(olsrr)
-ols_test_normality(citylmnon)
 
 
 
 
-
+#####All plots
 plot(citylm2, which = 1)
 plot(citylm2, which = 2)
 plot(citylm2, which = 3)

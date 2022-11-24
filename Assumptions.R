@@ -37,10 +37,11 @@ ols_plot_cooksd_chart(citylm2, print_plot = T)
 summary(citylm2)
 ###ASSUMPTION 1: Linearity
 plot(citylm, which = 1)
-cor(cityana_without_outliers)
+
 
 ###ASSUMPTION 2: independence of residual values (Durbin-Watson test)
-
+library(lmtest)
+dwtest(formula = citylm2, alternative = "two.sided")
 
 ###ASSUMPTION 3: Conditional mean should be zero
 
@@ -53,7 +54,10 @@ vif_values <- vif(citylmnon)
 barplot(vif_values, main = "VIF Values", horiz = TRUE, col = "steelblue")
 abline(v = 5, lwd = 3, lty = 2)
 
-cor(cityana_without_outliers)
+
+citycor <- cityana_without_outliers[ ,c('Rating', 'avgang', 'avgant', 'avgdis', 'avgjoy', 'avgsad'
+                                      , 'avgfear', 'avgtrust', 'avgsurp', 'review_seen', 'rating_seen')]
+cor(citycor, use = 'complete.obs')
 
 ###ASSUMPTION 5: Homoskedacity and no Autocorrelation (plot variance of residuals)
 plot(citylm2, which = 1)

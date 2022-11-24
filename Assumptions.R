@@ -2,8 +2,9 @@ library(ggplot2)
 library(stargazer)
 library(dplyr)
 
-citylm <- lm(cityana$Rating ~ cityana$avgang + cityana$avgant + cityana$avgdis + cityana$avgjoy + cityana$avgsad
-               + cityana$avgfear + cityana$avgtrust + cityana$avgsurp + cityana$reviews_seen + cityana$rating_seen)
+citylmnon <- lm(cityana$Rating ~ cityana$avgang + cityana$avgant + cityana$avgdis + cityana$avgjoy + cityana$avgsad
+               + cityana$avgfear + cityana$avgtrust + cityana$avgsurp + cityana$review_seen + cityana$rating_seen, 
+               data = cityana)
 
 citylm <- lm(Rating ~ ang + rating_seen + rating_seen*ang + review_seen + review_seen*ang +
                ant + rating_seen*ant + review_seen*ant + joy + rating_seen*joy + review_seen*joy +
@@ -35,7 +36,8 @@ citylm2 <- lm(Rating ~ ang + rating_seen + rating_seen*ang + review_seen + revie
 ols_plot_cooksd_chart(citylm2, print_plot = T)
 summary(citylm2)
 ###ASSUMPTION 1: Linearity
-
+plot(citylm, which = 1)
+cor(cityana_without_outliers)
 
 ###ASSUMPTION 2: independence of residual values (Durbin-Watson test)
 
@@ -45,23 +47,35 @@ summary(citylm2)
 
 ###ASSUMPTION 4: No Multicollinearity (variance of inflation (VIF))
 library(car)
-car::vif(citylm)
+vif(citylmnon)
+
+vif_values <- vif(citylmnon)
+barplot(vif_values, main = "VIF Values", horiz = TRUE, col = "steelblue")
+abline(v = 5, lwd = 3, lty = 2)
+
+cor(cityana_without_outliers)
 
 ###ASSUMPTION 5: Homoskedacity and no Autocorrelation (plot variance of residuals)
-
+plot(citylm2, which = 1)
+plot(citylm2, which = 3)
 
 ### Normality of residuals??? (kolmogorov-Smirnov and Shapiro-Wilk)
+hist(citylm2$residuals)
+plot(citylm2, which = 2)
+
+ks.test(cityana_without_outliers, 'pnorm')
+
 library(olsrr)
+ols_test_normality(citylmnon)
 
 
 
 
 
-
-plot(citylm, which = 1)
-plot(citylm, which = 2)
-plot(citylm, which = 3)
-plot(citylm, which = 5)
+plot(citylm2, which = 1)
+plot(citylm2, which = 2)
+plot(citylm2, which = 3)
+plot(citylm2, which = 5)
 
 par(mfrow=c(2,2))
-plot(citylm)
+plot(citylm2)

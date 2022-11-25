@@ -63,12 +63,14 @@ citycor <- cityana_without_outliers[ ,c('Rating', 'avgang', 'avgant', 'avgdis', 
                                       , 'avgfear', 'avgtrust', 'avgsurp', 'review_seen', 'rating_seen')]
 cor(citycor, use = 'complete.obs')
 
-###ASSUMPTION 4: Homoskedacity and no Autocorrelation (plot variance of residuals) = Will be violated
+###ASSUMPTION 4: Homoskedacity and no Autocorrelation (plot variance of residuals) = Will be violated (Breusch pagan test)
+ols_test_breusch_pagan(citylm2)
 plot(citylm2, which = 1)
 plot(citylm2, which = 3)
 
 ###ASSUMPTION 5 Normality of residuals (kolmogorov-Smirnov and Shapiro-Wilk)
 hist(citylm2$residuals)
+
 plot(citylm2, which = 1)
 plot(citylm2, which = 2)
 

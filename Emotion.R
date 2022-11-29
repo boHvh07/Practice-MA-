@@ -45,9 +45,9 @@ city_1 <- city_final %>%
   inner_join(nrceil2, by = 'word') 
 
 city_perc <- city_1 %>%
-  group_by(review_num) %>%
-  summarise(avgang = sum(anger, na.rm=T), avgant = sum(anticipation, na.rm=T), avgjoy = sum(joy, na.rm=T), avgsad = sum(sadness, na.rm=T),
-            avgdis = sum(disgust, na.rm=T), avgfear = sum(fear, na.rm=T), avgtrust = sum(trust, na.rm=T), avgsurp = sum(surprise, na.rm=T))
+  group_by(review_id) %>%
+  summarise(sumang = sum(anger, na.rm=T), sumant = sum(anticipation, na.rm=T), sumjoy = sum(joy, na.rm=T), sumsad = sum(sadness, na.rm=T),
+            sumdis = sum(disgust, na.rm=T), sumfear = sum(fear, na.rm=T), sumtrust = sum(trust, na.rm=T), sumsurp = sum(surprise, na.rm=T))
 
 city_perc$sum = rowSums(city_perc[,c(2:9)]) 
 
@@ -59,4 +59,6 @@ city_perc2 <- city_perc %>% rowwise() %>% mutate(ang = avgang/sum, ant = avgant/
 cityjoin = subset(city, select = -c(Review, review))
 
 cityana <- cityjoin %>%
-  inner_join(city_perc2, by = "review_num")
+  inner_join(city_perc2, by = "review_id")
+
+summary(cityana)

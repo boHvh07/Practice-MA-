@@ -15,6 +15,9 @@ city <- city %>%
 
 city = subset(city, select = -c(2, 7))
 
+city <- city %>%
+  mutate(review_id=row_number())
+
 #Remove numbers from text
 city$review <- removeNumbers(city$Review)
 

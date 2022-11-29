@@ -1,54 +1,3 @@
-library(tidytext)
-library(tidyverse)
-https://www.tidytextmining.com/tfidf.html
-
-city_2 = subset(city_word2, select = -c(word))
-
-city_2 <- city_2 %>%
-  rename("word"="lemma")
-
-#### Term frequency (group by rating / filter per rating can also prove informative)
-word_freq <- city_2 %>%
-  count(city, word, sort=TRUE)
-
-total_words <- word_freq %>% group_by(city) %>% summarize(total = sum(n))
-
-word_freq <- left_join(word_freq, total_words)
-
-freq_rank <- word_freq %>%
-  group_by(city) %>%
-  mutate(rank = row_number(), 
-         `term frequency` = n/total) %>%
-  ungroup()
-#### tf-idf
-restaurant_tf_idf <- word_freq %>%
-  bind_tf_idf(word, city, n)
-
-restaurant_tf_idf2 <- restaurant_tf_idf %>%
-  select(-total) %>%
-  arrange(desc(tf_idf))
-
-### tf-idf per star rating
-rating_words <- city_2 %>%
-  count(Rating, word, sort = TRUE)
-
-plot_rating <- rating_words %>%
-  bind_tf_idf(word, Rating, n) %>%
-  mutate(Rating = factor(Rating, levels = c('1', '2', '3', '4', '5')))
-
-plot_rating %>%
-  arrange(desc(tf_idf))
-
-plot_rating_tf <- plot_rating %>% 
-  group_by(Rating) %>% 
-  slice_max(tf_idf, n = 10) %>% 
-  ungroup() %>%
-  mutate(word = reorder(word, tf_idf)) %>%
-  ggplot(aes(tf_idf, word, fill = Rating)) +
-  geom_col(show.legend = FALSE) +
-  labs(x = "tf-idf", y = NULL) +
-  facet_wrap(~Rating, ncol = 2, scales = "free")
-plot_rating_tf
 
 #### Ordinal Regression (Use polr command)
 library(MASS)
@@ -103,7 +52,7 @@ ppo.model4 <- vglm(Rating ~ avgang + avgant + avgdis + avgjoy + avgsad
                      avgjoy*review_seen + avgsad*review_seen + avgfear*review_seen + avgtrust*review_seen + avgsurp*review_seen +
                      avgang*rating_seen + avgant*rating_seen + avgdis*rating_seen +
                      avgjoy*rating_seen + avgsad*rating_seen + avgfear*rating_seen + avgtrust*rating_seen + avgsurp*rating_seen
-                   ,data = cityana_without_outliers, family = propodds)
+                   ,data = cityana_without_outliers, family = cumulative(parallel = F~avgant, reverse = T))
 
 summary(ppo.model4)
 coef(ppo.model4, matrix = TRUE)
@@ -112,9 +61,15 @@ exp(coef(ppo.model4, matrix = TRUE))
 exp(confint(ppo.model4, matrix = TRUE))
 cbind(exp(coef(ppo.model4)), exp(confint(ppo.model4)))
 
+AIC(ppo.model4)
 
 
 
 
 ####Marginal effects table after model summary
 summary(cityana_without_outliers)
+
+library(stats)
+logLik(polrdata)
+logLik(ppo.model4)
+logLik(polrdata2)

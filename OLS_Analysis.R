@@ -64,7 +64,7 @@ ols_regress(Rating ~ fear + rating_seen + rating_seen*fear + review_seen + revie
 ols_regress(Rating ~ trust + rating_seen + rating_seen*trust + review_seen + review_seen*trust, data = cityana)
 ols_regress(Rating ~ surp + rating_seen + rating_seen*surp + review_seen + review_seen*surp, data = cityana)
 
-ols_regress(Rating ~ ang + rating_seen + rating_seen*ang + review_seen + review_seen*ang +
+olsdata <- ols_regress(Rating ~ ang + rating_seen + rating_seen*ang + review_seen + review_seen*ang +
               ant + rating_seen*ant + review_seen*ant + joy + rating_seen*joy + review_seen*joy +
               sad + rating_seen*sad + review_seen*sad + dis + rating_seen*dis + review_seen*dis +
               fear + rating_seen*fear + review_seen*fear + trust + rating_seen*trust + review_seen*trust +
@@ -72,6 +72,7 @@ ols_regress(Rating ~ ang + rating_seen + rating_seen*ang + review_seen + review_
             , data = cityana_without_outliers)
 
 summary(olsdata)
+ols_aic(citylm2)
 #### Ordinal Regression (Use polr command)
 library(MASS)
 polrdata <- polr(as.factor(Rating) ~ ang + rating_seen + rating_seen*ang + review_seen + review_seen*ang +
@@ -83,4 +84,11 @@ polrdata <- polr(as.factor(Rating) ~ ang + rating_seen + rating_seen*ang + revie
 
 summary(polrdata)
 
-ols_aic(citylm2)
+
+polrdata2 <- polr(as.factor(Rating) ~ ang + rating_seen + rating_seen*ang + review_seen + review_seen*ang +
+                   joy + rating_seen*joy + review_seen*joy +
+                   sad + rating_seen*sad + review_seen*sad + dis + rating_seen*dis + review_seen*dis +
+                   fear + rating_seen*fear + review_seen*fear + trust + rating_seen*trust + review_seen*trust +
+                   surp + rating_seen*surp + review_seen*surp
+                 , data = cityana_without_outliers, Hess = TRUE, method = c('logistic'))
+summary(polrdata2)

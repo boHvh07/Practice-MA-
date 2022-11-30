@@ -1,11 +1,12 @@
 
 #### Ordinal Regression (Use polr command)
+library(VGAM)
 library(MASS)
-polrdata <- polr(as.factor(Rating) ~ avgang + avgant + avgdis + avgjoy + avgsad
-                 + avgfear + avgtrust + avgsurp + review_seen + rating_seen + avgang*review_seen + avgant*review_seen + avgdis*review_seen +
-                   avgjoy*review_seen + avgsad*review_seen + avgfear*review_seen + avgtrust*review_seen + avgsurp*review_seen +
-                   avgang*rating_seen + avgant*rating_seen + avgdis*rating_seen + avgjoy*rating_seen + avgsad*rating_seen + 
-                   avgfear*rating_seen + avgtrust*rating_seen + avgsurp*rating_seen,
+polrdata <- polr(as.factor(Rating) ~ sumang + sumant + sumdis + sumjoy + sumsad
+                 + sumfear + sumtrust + sumsurp + review_seen + rating_seen + sumang*review_seen + sumant*review_seen + sumdis*review_seen +
+                   sumjoy*review_seen + sumsad*review_seen + sumfear*review_seen + sumtrust*review_seen + sumsurp*review_seen +
+                   sumang*rating_seen + sumant*rating_seen + sumdis*rating_seen + sumjoy*rating_seen + sumsad*rating_seen + 
+                   sumfear*rating_seen + sumtrust*rating_seen + sumsurp*rating_seen,
                  data = cityana_without_outliers, Hess = TRUE, method = c('logistic'))
 
 summary(polrdata)
@@ -20,12 +21,12 @@ head(fitted(ppo.model))
 
 summary(ppo.model)
 
-ppo.model2 <- vglm(Rating ~ avgang + avgant + avgdis + avgjoy + avgsad
-                  + avgfear + avgtrust + avgsurp + review_seen + rating_seen + avgang*review_seen + avgant*review_seen + avgdis*review_seen +
-                    avgjoy*review_seen + avgsad*review_seen + avgfear*review_seen + avgtrust*review_seen + avgsurp*review_seen +
-                    avgang*rating_seen + avgant*rating_seen + avgdis*rating_seen +
-                    avgjoy*rating_seen + avgsad*rating_seen + avgfear*rating_seen + avgtrust*rating_seen + avgsurp*rating_seen
-                  ,data = cityana_without_outliers, family = cumulative(parallel = T~avgant))
+ppo.model3 <- vglm(Rating ~ sumang + sumant + sumdis + sumjoy + sumsad
+                  + sumfear + sumtrust + sumsurp + review_seen + rating_seen + sumang*review_seen + sumant*review_seen + sumdis*review_seen +
+                    sumjoy*review_seen + sumsad*review_seen + sumfear*review_seen + sumtrust*review_seen + sumsurp*review_seen +
+                    sumang*rating_seen + sumant*rating_seen + sumdis*rating_seen +
+                    sumjoy*rating_seen + sumsad*rating_seen + sumfear*rating_seen + sumtrust*rating_seen + sumsurp*rating_seen
+                  ,data = cityana_without_outliers, family = cumulative(parallel = F~sumant, reverse = F))
 
 summary(ppo.model2)
 
@@ -34,25 +35,23 @@ ppo.model3 <- vglm(Rating ~ ang + rating_seen + rating_seen*ang + review_seen + 
 
 summary(ppo.model3)
 
-ctable <- coef(summary(ppo.model))
+ctable <- coef(summary(ppo.model2))
 
-ci <- confint(ppo.model)
+ci <- confint(ppo.model2)
 ci 
 
-exp(coef(ppo.model))
+exp(coef(ppo.model2))
 
-exp(cbind(OR = coef(ppo.model), ci))
+exp(cbind(OR = coef(ppo.model2), ci))
 
-coef(ppo.model(matrix = TRUE))
+coef(ppo.model2(matrix = TRUE))
 
-
-#### partial nonproportional odds model
-ppo.model4 <- vglm(Rating ~ avgang + avgant + avgdis + avgjoy + avgsad
-                   + avgfear + avgtrust + avgsurp + review_seen + rating_seen + avgang*review_seen + avgant*review_seen + avgdis*review_seen +
-                     avgjoy*review_seen + avgsad*review_seen + avgfear*review_seen + avgtrust*review_seen + avgsurp*review_seen +
-                     avgang*rating_seen + avgant*rating_seen + avgdis*rating_seen +
-                     avgjoy*rating_seen + avgsad*rating_seen + avgfear*rating_seen + avgtrust*rating_seen + avgsurp*rating_seen
-                   ,data = cityana_without_outliers, family = cumulative(parallel = F~avgant, reverse = T))
+ppo.model4 <- vglm(Rating ~ sumang + sumant + sumdis + sumjoy + sumsad
+                   + sumfear + sumtrust + sumsurp + review_seen + rating_seen + sumang*review_seen + sumant*review_seen + sumdis*review_seen +
+                     sumjoy*review_seen + sumsad*review_seen + sumfear*review_seen + sumtrust*review_seen + sumsurp*review_seen +
+                     sumang*rating_seen + sumant*rating_seen + sumdis*rating_seen +
+                     sumjoy*rating_seen + sumsad*rating_seen + sumfear*rating_seen + sumtrust*rating_seen + sumsurp*rating_seen
+                   ,data = cityana_without_outliers, family = cumulative(parallel = F))
 
 summary(ppo.model4)
 coef(ppo.model4, matrix = TRUE)
@@ -73,3 +72,14 @@ library(stats)
 logLik(polrdata)
 logLik(ppo.model4)
 logLik(polrdata2)
+
+
+
+polrdata2 <- polr(as.factor(Rating) ~ ang + dis + joy + sad
+                 + fear + trust + surp + review_seen + rating_seen + ang*review_seen + dis*review_seen +
+                   joy*review_seen + sad*review_seen + fear*review_seen + trust*review_seen + surp*review_seen +
+                   ang*rating_seen + dis*rating_seen + joy*rating_seen + sad*rating_seen + 
+                   fear*rating_seen + trust*rating_seen + surp*rating_seen,
+                 data = cityana_without_outliers, Hess = TRUE, method = c('logistic'))
+
+summary(polrdata2)

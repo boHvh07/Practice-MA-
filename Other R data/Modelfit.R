@@ -45,35 +45,77 @@ library(nnet)
 library(ggplot2)
 library(reshape2)
 
-test <- multinom(Rating ~ sumang +sumant + sumdis + sumjoy + sumsad
+multinom <- multinom(Rating ~ sumang +sumant + sumdis + sumjoy + sumsad
          + sumfear + sumtrust + sumsurp + review_seen + rating_seen + sumang*review_seen + sumant*review_seen + sumdis*review_seen +
            sumjoy*review_seen + sumsad*review_seen + sumfear*review_seen + sumtrust*review_seen + sumsurp*review_seen +
            sumang*rating_seen + sumant*rating_seen + sumdis*rating_seen +
            sumjoy*rating_seen + sumsad*rating_seen + sumfear*rating_seen + sumtrust*rating_seen + sumsurp*rating_seen
          ,data = cityana_without_outliers)
-test
+multinom
 
 
-coefs <- coef(test)
+coefs <- coef(multinom)
 coefs
 exp(coefs)
 trans_test <- (exp(coefs)-1)*100
 round(trans_test, digits = 2)
 
-z <- summary(test)$coefficients/summary(test)$standard.errors
+z <- summary(multinom)$coefficients/summary(multinom)$standard.errors
 z
 p <- (1 - pnorm(abs(z), 0, 1))*2
 round(p, digits = 4)
 
 
-prediction of categories
+#prediction of categories???
+library(caret)
+library(nnet)
+test <- nnet::multinom(Rating ~ sumang +sumant + sumdis + sumjoy + sumsad
+                 + sumfear + sumtrust + sumsurp + review_seen + rating_seen + sumang*review_seen + sumant*review_seen + sumdis*review_seen +
+                   sumjoy*review_seen + sumsad*review_seen + sumfear*review_seen + sumtrust*review_seen + sumsurp*review_seen +
+                   sumang*rating_seen + sumant*rating_seen + sumdis*rating_seen +
+                   sumjoy*rating_seen + sumsad*rating_seen + sumfear*rating_seen + sumtrust*rating_seen + sumsurp*rating_seen
+                 ,data = cityana_without_outliers)
+
+summary(test)
+
+
 
 #### PPO model    (probably wrong but gives no error message)
-ppo.model3 <- vglm(Rating ~ sumang + sumant + sumdis + sumjoy + sumsad
+ppo.model1 <- vglm(Rating ~ sumang + sumant + sumdis + sumjoy + sumsad
                    + sumfear + sumtrust + sumsurp + review_seen + rating_seen + sumang*review_seen + sumant*review_seen + sumdis*review_seen +
                      sumjoy*review_seen + sumsad*review_seen + sumfear*review_seen + sumtrust*review_seen + sumsurp*review_seen +
                      sumang*rating_seen + sumant*rating_seen + sumdis*rating_seen +
                      sumjoy*rating_seen + sumsad*rating_seen + sumfear*rating_seen + sumtrust*rating_seen + sumsurp*rating_seen
-                   ,data = cityana_without_outliers, family = cumulative(parallel = F~sumant, reverse = F))
+                   ,data = cityana_without_outliers, family = cumulative(parallel = T~sumant, reverse = T))
+
+summary(ppo.model1)
+
+ppo.model2 <- vglm(Rating ~ sumang + sumant + sumdis + sumjoy + sumsad
+                   + sumfear + sumtrust + sumsurp + review_seen + rating_seen
+                   ,data = cityana_without_outliers, family = cumulative(parallel = T~sumant, reverse = T))
+
+summary(ppo.model2)
+
+ppo.model3 <- vglm(Rating ~ sumant + review_seen + rating_seen + sumant*review_seen + sumant*rating_seen 
+                   ,data = cityana_without_outliers, family = cumulative(parallel = T ~ sumant, reverse = T))
 
 summary(ppo.model3)
+
+####NonPO model
+npo.model1 <- vglm(Rating ~ sumang + sumdis + sumjoy + sumsad
+                   + sumfear + sumtrust + sumsurp + review_seen + rating_seen + sumang*review_seen + sumdis*review_seen +
+                     sumjoy*review_seen + sumsad*review_seen + sumfear*review_seen + sumtrust*review_seen + sumsurp*review_seen +
+                     sumang*rating_seen + sumdis*rating_seen +
+                     sumjoy*rating_seen + sumsad*rating_seen + sumfear*rating_seen + sumtrust*rating_seen + sumsurp*rating_seen
+                   ,data = cityana_without_outliers, family = cumulative)
+summary(npo.model1)
+
+npo.model2 <- vglm(Rating ~ sumang + sumdis + sumjoy + sumsad + sumfear + sumtrust +
+                     sumsurp + review_seen + rating_seen ,data = cityana_without_outliers, family = cumulative(parallel = F))
+summary(npo.model2)
+
+library(stats)
+logLik(ppo.model1)
+logLik(npo.model2)
+AICqrrvglm(ppo.model1)
+AICqrrvglm(npo.model1)

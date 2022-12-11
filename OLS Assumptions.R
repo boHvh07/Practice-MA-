@@ -31,12 +31,18 @@ outliers <- cityana[names_of_influential,]
 
 cityana_without_outliers <- cityana %>% anti_join(outliers)
 
+
+
 citylm2 <- lm(Rating ~ ang + rating_seen + rating_seen*ang + review_seen + review_seen*ang +
                    ant + rating_seen*ant + review_seen*ant + joy + rating_seen*joy + review_seen*joy +
                    sad + rating_seen*sad + review_seen*sad + dis + rating_seen*dis + review_seen*dis +
                    fear + rating_seen*fear + review_seen*fear + trust + rating_seen*trust + review_seen*trust +
                    surp + rating_seen*surp + review_seen*surp
                  , data = cityana_without_outliers)
+
+citylmnon <- lm(Rating ~ ang + ant + dis + joy + sad
+                + fear + trust + surp + review_seen + rating_seen, 
+                data = cityana_without_outliers)
 
 ### Remove outliers
 ols_plot_cooksd_chart(citylm2, print_plot = T)
@@ -59,16 +65,18 @@ barplot(vif_values, main = "VIF Values", horiz = TRUE, col = "steelblue")
 abline(v = 5, lwd = 3, lty = 2)
 
 
-citycor <- cityana_without_outliers[ ,c('Rating', 'avgang', 'avgant', 'avgdis', 'avgjoy', 'avgsad'
-                                      , 'avgfear', 'avgtrust', 'avgsurp', 'review_seen', 'rating_seen')]
-cor(citycor, use = 'complete.obs')
+citycor <- cityana_without_outliers[ ,c('Rating', 'ang', 'ant', 'dis', 'joy', 'sad'
+                                      , 'fear', 'trust', 'surp', 'review_seen', 'rating_seen')]
+cormat <- cor(citycor, use = 'complete.obs')
+cormat <- round(cormat, digits = 4)
 
+write.csv(cormat, "C:\\Users\\Bovan\\OneDrive\\Documents\\MA Thesis\\Thesis\\cormat.csv")
 ###ASSUMPTION 4: Homoskedacity and no Autocorrelation (plot variance of residuals) = Will be violated (Breusch pagan test)
 ols_test_breusch_pagan(citylm2)
 plot(citylm2, which = 1)
 plot(citylm2, which = 3)
 
-###ASSUMPTION 5 Normality of residuals (kolmogorov-Smirnov and Shapiro-Wilk)
+###ASSUMPTION 5 Normality of residuals
 hist(citylm2$residuals)
 
 plot(citylm2, which = 1)

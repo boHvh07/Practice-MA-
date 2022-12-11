@@ -51,8 +51,8 @@ city_perc <- city_1 %>%
 
 city_perc$sum = rowSums(city_perc[,c(2:9)]) 
 
-city_perc2 <- city_perc %>% rowwise() %>% mutate(ang = avgang/sum, ant = avgant/sum, joy = avgjoy/sum, sad = avgsad/sum, 
-                                                     dis = avgdis/sum, fear = avgfear/sum, trust = avgtrust/sum, surp = avgsurp/sum)   
+city_perc2 <- city_perc %>% rowwise() %>% mutate(ang = sumang/sum, ant = sumant/sum, joy = sumjoy/sum, sad = sumsad/sum, 
+                                                     dis = sumdis/sum, fear = sumfear/sum, trust = sumtrust/sum, surp = sumsurp/sum)   
 
 
 ### Join with original dataset for analysis

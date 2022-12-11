@@ -83,7 +83,7 @@ rank5 <- rank5 %>%
 
 rank_figure <- ggarrange(rank1, rank2, rank3, rank4, rank5,
                          ncol = 2, nrow = 3)
-annotate_figure(rank_figure, top = text_grob("Most frequent used words per restaurant rating",
+annotate_figure(rank_figure, top = text_grob("Most frequently used words per restaurant rating",
                                              color = "black", face = 'bold', size = 14))
 ggsave("rank_figure.pdf")
 

@@ -33,8 +33,10 @@ olssimp <- lm(Rating ~ sumang + rating_seen + review_seen + sumant + sumjoy + su
                , data = cityana_without_outliers)
 
 summary(olssimp)
-plot(olssimp)
-coeftest(olssimp, vcov. = sandwich)
+
+olssimp2 <- coeftest(olssimp, vcov. = sandwich)
+
+anova(olssimp)
 
 ### Fixed effects model (restaurant) OLS regression 
 cityana_without_outliers <- cityana_without_outliers %>%

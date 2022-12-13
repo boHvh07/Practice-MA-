@@ -1,13 +1,10 @@
 ###NRC (via base)
 NRC.Emotion.Intensity.Lexicon.v1 <- read.delim("~/Downloads/NRC-Emotion-Intensity-Lexicon/NRC-Emotion-Intensity-Lexicon/NRC-Emotion-Intensity-Lexicon-v1.txt", header=FALSE)
-RC.Emotion.Lexicon.Wordlevel.v0.92 <- read.delim("~/Downloads/NRC-Emotion-Lexicon/NRC-Emotion-Lexicon/NRC-Emotion-Lexicon-Wordlevel-v0.92.txt", header=FALSE)
 
 ### Preparing data for join()
 library(tidyverse)
 library(dplyr)
 
-emolex <- NRC.Emotion.Lexicon.Wordlevel.v0.92 %>%
-  rename("word"="V1", "emotion"="V2", "score"="V3")
 nrceil <- NRC.Emotion.Intensity.Lexicon.v1 %>%
   rename("word"="V1", "emotion"="V2", "score"="V3")
 
@@ -31,14 +28,6 @@ nrceil2 <- nrceil %>%
   mutate(surprise = ifelse(nrceil$emotion == "surprise", nrceil$score, NA))
 
 
-
-
-###Emolex (unnecesary)
-city_emo <- city_final%>%
-  inner_join(emolex, by = 'word') %>% # inner join with our lexicon to get the polarity score
-  group_by(review_num) #group by for sentence polarity
-
-
 ###NRCEIL
 
 city_1 <- city_final %>%
@@ -58,7 +47,7 @@ city_perc2 <- city_perc %>% rowwise() %>% mutate(ang = sumang/sum, ant = sumant/
 ### Join with original dataset for analysis
 cityjoin = subset(city, select = -c(Review, review))
 
-cityana <- cityjoin %>%
+cityana <- cityjoin %>% #change name per city
   inner_join(city_perc2, by = "review_id")
 
 summary(cityana)

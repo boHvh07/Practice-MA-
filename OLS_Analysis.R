@@ -1,59 +1,80 @@
 
-#### OLS regression indiv. Tryout
-
-ols_regress(Rating ~ ang + rating_seen + rating_seen*ang + review_seen + review_seen*ang, data = cityana)
-ols_regress(Rating ~ ant + rating_seen + rating_seen*ant + review_seen + review_seen*ant, data = cityana)
-ols_regress(Rating ~ joy + rating_seen + rating_seen*joy + review_seen + review_seen*joy, data = cityana)
-ols_regress(Rating ~ sad + rating_seen + rating_seen*sad + review_seen + review_seen*sad, data = cityana)
-ols_regress(Rating ~ dis + rating_seen + rating_seen*dis + review_seen + review_seen*dis, data = cityana)
-ols_regress(Rating ~ fear + rating_seen + rating_seen*fear + review_seen + review_seen*fear, data = cityana)
-ols_regress(Rating ~ trust + rating_seen + rating_seen*trust + review_seen + review_seen*trust, data = cityana)
-ols_regress(Rating ~ surp + rating_seen + rating_seen*surp + review_seen + review_seen*surp, data = cityana)
-
-
-
 library(sandwich)
 library(lmtest)
+library(MASS)
 ### Full model OLS regression
-summary(cityana_without_outliers)
+summary(citydata_out)
 
 olsfull <- lm(Rating ~ ang + rating_seen + rating_seen*ang + review_seen + review_seen*ang +
               ant + rating_seen*ant + review_seen*ant + joy + rating_seen*joy + review_seen*joy +
               sad + rating_seen*sad + review_seen*sad + dis + rating_seen*dis + review_seen*dis +
               fear + rating_seen*fear + review_seen*fear + trust + rating_seen*trust + review_seen*trust +
               surp + rating_seen*surp + review_seen*surp
-            , data = cityana_without_outliers)
+            , data = citydata_out)
+
+olsfull <- lm(Rating ~ sumang + rating_seen + rating_seen*sumang + review_seen + review_seen*sumang +
+                sumant + rating_seen*sumant + review_seen*sumant + sumjoy + rating_seen*sumjoy + review_seen*sumjoy +
+                sumsad + rating_seen*sumsad + review_seen*sumsad + sumdis + rating_seen*sumdis + review_seen*sumdis +
+                sumfear + rating_seen*sumfear + review_seen*sumfear + sumtrust + rating_seen*sumtrust + review_seen*sumtrust +
+                sumsurp + rating_seen*sumsurp + review_seen*sumsurp
+              , data = citydata_out)
 
 summary(olsfull)
 
-coeftest(olsfull, vcov. = sandwich)
+olsfull <- coeftest(olsfull, vcov. = sandwich)
+olsfull <- round(olsfull, digits = 4)
+olsfull
 
+logLik(olsfull)
+AIC(olsfull)
+BIC(olsfull)
+
+write.csv(olsfull, "C:\\Users\\Bovan\\OneDrive\\Documents\\MA Thesis\\Thesis\\olsfull.csv")
 ### Simple model OLS regression 
-olssimp <- lm(Rating ~ sumang + rating_seen + review_seen + sumant + sumjoy + sumsad +  sumdis + sumfear + sumtrust + sumsurp
-               , data = cityana_without_outliers)
+olssimp <- lm(Rating ~ sumang + rating_seen + review_seen + sumant + sumjoy + sumsad +  sumdis + sumfear
+              + sumtrust + sumsurp,
+               data = citydata_out)
 
-summary(olssimp)
+olssimp <- coeftest(olssimp, vcov. = sandwich)
+olssimp <- round(olssimp, digits = 4)
+olssimp
 
-olssimp2 <- coeftest(olssimp, vcov. = sandwich)
+logLik(olssimp)
+AIC(olssimp)
+BIC(olssimp)
 
-anova(olssimp)
-
+write.csv(olssimp, "C:\\Users\\Bovan\\OneDrive\\Documents\\MA Thesis\\Thesis\\olssimp.csv")
 ### Fixed effects model (restaurant) OLS regression 
-cityana_without_outliers <- cityana_without_outliers %>%
+citydata_out <- citydata_out %>%
   rename("Restname"="Restaurant Name")
 
 olsrest <- lm(Rating ~ sumang + rating_seen + review_seen + sumant + sumjoy + sumsad +  sumdis + sumfear
                        + sumtrust + sumsurp + as.factor(Restname)
-                       , data = cityana_without_outliers)
+                       , data = citydata_out)
 
 summary(olsrest)
 
-coeftest(olsrest, vcov. = sandwich)
+olsrest <- coeftest(olsrest, vcov. = sandwich)
+olsrest <- round(olsrest, digits = 4)
+olsrest 
 
+logLik(olsrest)
+AIC(olsrest)
+BIC(olsrest)
+
+write.csv(olsrest, "C:\\Users\\Bovan\\OneDrive\\Documents\\MA Thesis\\Thesis\\olsrest.csv")
 ### Fixed effects model (cities) OLS regression  
 olscity <- lm(Rating ~ sumang + rating_seen + review_seen + sumant + sumjoy + sumsad +  sumdis + sumfear
                        + sumtrust + sumsurp + as.factor(city)
-                       , data = cityana_without_outliers)
+                       , data = citydata_out)
+summary(olscity)
+
+olscity <- coeftest(olscity, vcov. = sandwich)
+olscity <- round(olscity, digits = 4)
 olscity
 
-coeftest(olscity, vcov. = sandwich)
+logLik(olscity)
+AIC(olscity)
+BIC(olscity)
+
+write.csv(olscity, "C:\\Users\\Bovan\\OneDrive\\Documents\\MA Thesis\\Thesis\\olscity.csv")

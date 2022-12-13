@@ -5,7 +5,7 @@ library(ggpubr)
 
 city_2 = subset(city_1, select = -c(word))
 
-city_2 <- city_2 %>%
+city_ny <- city_2 %>%
   rename("word"="lemma")
 
 #### Term frequency (group by rating / filter per rating can also prove informative)

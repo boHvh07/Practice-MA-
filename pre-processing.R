@@ -7,8 +7,8 @@ library(dplyr)
 library(textstem)
 ###dataset 
 
-city <- newyorkmerge
-city$city <- 'New York'
+city <- bostonmerge
+city$city <- 'Boston'
 
 city <- city %>%
   rename("review_seen"="...1")

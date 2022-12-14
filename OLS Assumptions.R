@@ -8,6 +8,14 @@ citylm <- lm(Rating ~ ang + rating_seen + rating_seen*ang + review_seen + review
                fear + rating_seen*fear + review_seen*fear + trust + rating_seen*trust + review_seen*trust +
                surp + rating_seen*surp + review_seen*surp
              , data = citydata)
+
+citylm <- lm(Rating ~ sumang + rating_seen + rating_seen*sumang + review_seen + review_seen*sumang +
+               sumant + rating_seen*sumant + review_seen*sumant + sumjoy + rating_seen*sumjoy + review_seen*sumjoy +
+               sumsad + rating_seen*sumsad + review_seen*sumsad + sumdis + rating_seen*sumdis + review_seen*sumdis +
+               sumfear + rating_seen*sumfear + review_seen*sumfear + sumtrust + rating_seen*sumtrust + review_seen*sumtrust +
+               sumsurp + rating_seen*sumsurp + review_seen*sumsurp
+             , data = citydata)
+
 citylm
 stargazer(citylm)
 summary(citylm)
@@ -49,7 +57,7 @@ library(lmtest)
 dwtest(formula = citylm2, alternative = "two.sided")
 
 
-\###ASSUMPTION 3: No Multicollinearity (variance of inflation (VIF))
+###ASSUMPTION 3: No Multicollinearity (variance of inflation (VIF))
 library(car)
 
 citycor <- citydata_out[ ,c('Rating', 'ang', 'ant', 'dis', 'joy', 'sad'

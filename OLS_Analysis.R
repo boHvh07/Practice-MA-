@@ -5,14 +5,7 @@ library(MASS)
 ### Full model OLS regression
 summary(citydata_out)
 
-olsfull <- lm(Rating ~ ang + rating_seen + rating_seen*ang + review_seen + review_seen*ang +
-              ant + rating_seen*ant + review_seen*ant + joy + rating_seen*joy + review_seen*joy +
-              sad + rating_seen*sad + review_seen*sad + dis + rating_seen*dis + review_seen*dis +
-              fear + rating_seen*fear + review_seen*fear + trust + rating_seen*trust + review_seen*trust +
-              surp + rating_seen*surp + review_seen*surp
-            , data = citydata_out)
-
-olsfull <- lm(Rating ~ sumang + rating_seen + rating_seen*sumang + review_seen + review_seen*sumang +
+olsfull <- lm(Rating ~ sumang + rating_seen + review_seen + review_seen*sumang + review_seen*sumang +
                 sumant + rating_seen*sumant + review_seen*sumant + sumjoy + rating_seen*sumjoy + review_seen*sumjoy +
                 sumsad + rating_seen*sumsad + review_seen*sumsad + sumdis + rating_seen*sumdis + review_seen*sumdis +
                 sumfear + rating_seen*sumfear + review_seen*sumfear + sumtrust + rating_seen*sumtrust + review_seen*sumtrust +
@@ -31,7 +24,7 @@ BIC(olsfull)
 
 write.csv(olsfull, "C:\\Users\\Bovan\\OneDrive\\Documents\\MA Thesis\\Thesis\\olsfull.csv")
 ### Simple model OLS regression 
-olssimp <- lm(Rating ~ sumang + rating_seen + review_seen + sumant + sumjoy + sumsad +  sumdis + sumfear
+olssimp <- lm(Rating ~ sumang + sumant + sumjoy + sumsad +  sumdis + sumfear
               + sumtrust + sumsurp,
                data = citydata_out)
 
@@ -48,9 +41,13 @@ write.csv(olssimp, "C:\\Users\\Bovan\\OneDrive\\Documents\\MA Thesis\\Thesis\\ol
 citydata_out <- citydata_out %>%
   rename("Restname"="Restaurant Name")
 
-olsrest <- lm(Rating ~ sumang + rating_seen + review_seen + sumant + sumjoy + sumsad +  sumdis + sumfear
-                       + sumtrust + sumsurp + as.factor(Restname)
-                       , data = citydata_out)
+
+olsrest <- lm(Rating ~ sumang + rating_seen + rating_seen*sumang + review_seen + review_seen*sumang +
+                sumant + rating_seen*sumant + review_seen*sumant + sumjoy + rating_seen*sumjoy + review_seen*sumjoy +
+                sumsad + rating_seen*sumsad + review_seen*sumsad + sumdis + rating_seen*sumdis + review_seen*sumdis +
+                sumfear + rating_seen*sumfear + review_seen*sumfear + sumtrust + rating_seen*sumtrust + review_seen*sumtrust +
+                sumsurp + rating_seen*sumsurp + review_seen*sumsurp + as.factor(Restname)
+              , data = citydata_out)
 
 summary(olsrest)
 
@@ -67,6 +64,14 @@ write.csv(olsrest, "C:\\Users\\Bovan\\OneDrive\\Documents\\MA Thesis\\Thesis\\ol
 olscity <- lm(Rating ~ sumang + rating_seen + review_seen + sumant + sumjoy + sumsad +  sumdis + sumfear
                        + sumtrust + sumsurp + as.factor(city)
                        , data = citydata_out)
+
+olscity <- lm(Rating ~ sumang + rating_seen + rating_seen*sumang + review_seen + review_seen*sumang +
+                sumant + rating_seen*sumant + review_seen*sumant + sumjoy + rating_seen*sumjoy + review_seen*sumjoy +
+                sumsad + rating_seen*sumsad + review_seen*sumsad + sumdis + rating_seen*sumdis + review_seen*sumdis +
+                sumfear + rating_seen*sumfear + review_seen*sumfear + sumtrust + rating_seen*sumtrust + review_seen*sumtrust +
+                sumsurp + rating_seen*sumsurp + review_seen*sumsurp + factor(city)
+              , data = citydata_out)
+
 summary(olscity)
 
 olscity <- coeftest(olscity, vcov. = sandwich)

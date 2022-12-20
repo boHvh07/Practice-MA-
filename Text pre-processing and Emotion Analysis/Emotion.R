@@ -38,12 +38,6 @@ city_perc <- city_1 %>%
   summarise(sumang = sum(anger, na.rm=T), sumant = sum(anticipation, na.rm=T), sumjoy = sum(joy, na.rm=T), sumsad = sum(sadness, na.rm=T),
             sumdis = sum(disgust, na.rm=T), sumfear = sum(fear, na.rm=T), sumtrust = sum(trust, na.rm=T), sumsurp = sum(surprise, na.rm=T))
 
-city_perc$sum = rowSums(city_perc[,c(2:9)]) 
-
-city_perc2 <- city_perc %>% rowwise() %>% mutate(ang = sumang/sum, ant = sumant/sum, joy = sumjoy/sum, sad = sumsad/sum, 
-                                                     dis = sumdis/sum, fear = sumfear/sum, trust = sumtrust/sum, surp = sumsurp/sum)   
-
-
 ### Join with original dataset for analysis
 cityjoin = subset(city, select = -c(Review, review))
 

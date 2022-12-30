@@ -3,29 +3,12 @@ library(tidyverse)
 library(ggplot2)
 library(ggpubr)
 
-city_2 = subset(city_1, select = -c(word))
-
-city_2.2 <- city_2 %>%
   rename("word"="lemma")
 #### Term frequency all data
 word_freq <- worddata %>%
   count(word, sort=TRUE)
 
-#### Term frequency (group by rating / filter per rating can also prove informative) \\\\\\ didnt use
-word_freq <- city_2.2 %>%
-  count(city, word, sort=TRUE)
-
-total_words <- word_freq %>% group_by(city) %>% summarize(total = sum(n))
-
-word_freq2 <- left_join(word_freq, total_words)
-
-freq_rank <- word_freq2 %>%
-  group_by(city) %>%
-  mutate(rank = row_number(), 
-         `term frequency` = n/total) %>%
-  ungroup()
-
-write.csv(freq_rank, "freq_rank.csv")
+total_words <- word_freq %>% summarize(total = sum(n))
 
 
 ### Plot rating
@@ -90,4 +73,5 @@ rank_figure <- ggarrange(rank1, rank2, rank3, rank4, rank5,
                          ncol = 2, nrow = 3)
 annotate_figure(rank_figure, top = text_grob("Most frequently used words per restaurant rating",
                                              color = "black", face = 'bold', size = 14))
+rank_figure
 ggsave("rank_figure.pdf")

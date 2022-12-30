@@ -25,26 +25,21 @@ outliers <- citydata[names_of_influential,]
 
 citydata_out <- citydata %>% anti_join(outliers)
 
+citylm2 <- lm(Rating ~ sumang + rating_seen + rating_seen*sumang + review_seen + review_seen*sumang +
+               sumant + rating_seen*sumant + review_seen*sumant + sumjoy + rating_seen*sumjoy + review_seen*sumjoy +
+               sumsad + rating_seen*sumsad + review_seen*sumsad + sumdis + rating_seen*sumdis + review_seen*sumdis +
+               sumfear + rating_seen*sumfear + review_seen*sumfear + sumtrust + rating_seen*sumtrust + review_seen*sumtrust +
+               sumsurp + rating_seen*sumsurp + review_seen*sumsurp
+             , data = citydata_out)
 
-
-citylm2 <- lm(Rating ~ ang + rating_seen + rating_seen*ang + review_seen + review_seen*ang +
-                   ant + rating_seen*ant + review_seen*ant + joy + rating_seen*joy + review_seen*joy +
-                   sad + rating_seen*sad + review_seen*sad + dis + rating_seen*dis + review_seen*dis +
-                   fear + rating_seen*fear + review_seen*fear + trust + rating_seen*trust + review_seen*trust +
-                   surp + rating_seen*surp + review_seen*surp
-                 , data = citydata_out)
-
-citylmnon <- lm(Rating ~ ang + ant + dis + joy + sad
-                + fear + trust + surp + review_seen + rating_seen, 
-                data = citydata_out)
 
 ###ASSUMPTION 1: Linearity
-plot(citylm, which = 1)
+plot(citylm2, which = 1)
 
 
 ###ASSUMPTION 2: independence of residual values (Durbin-Watson test)
 library(lmtest)
-dwtest(formula = citylm, alternative = "two.sided")
+dwtest(formula = citylm2, alternative = "two.sided")
 
 
 ###ASSUMPTION 3: No Multicollinearity (variance of inflation (VIF))
@@ -58,8 +53,8 @@ cormat
 
 write.csv(cormat, "C:\\Users\\Bovan\\OneDrive\\Documents\\MA Thesis\\Thesis\\cormat.csv")
 ###ASSUMPTION 4: Homoskedacity and no Autocorrelation (plot variance of residuals) = Will be violated (Breusch pagan test)
-ols_test_breusch_pagan(citylm)
-plot(citylm, which = 3)
+ols_test_breusch_pagan(citylm2)
+plot(citylm2, which = 3)
 
 ###ASSUMPTION 5 Normality of residuals
 hist(citylm$residuals)

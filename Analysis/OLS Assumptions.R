@@ -57,8 +57,8 @@ ols_test_breusch_pagan(citylm2)
 plot(citylm2, which = 3)
 
 ###ASSUMPTION 5 Normality of residuals
-hist(citylm$residuals)
-plot(citylm, which = 2)
+hist(citylm2$residuals)
+plot(citylm2, which = 2)
 
 
 

@@ -7,11 +7,13 @@ library(dplyr)
 library(textstem)
 ###dataset 
 
-city <- bostonmerge
+city <- newyorkmerge
 city$city <- 'Boston'
 
 city <- city %>%
   rename("review_seen"="...1")
+
+city <- city[!(city$review_seen > 200),]
 
 city = subset(city, select = -c(2, 7))
 

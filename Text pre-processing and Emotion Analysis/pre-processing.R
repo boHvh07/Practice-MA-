@@ -7,7 +7,7 @@ library(dplyr)
 library(textstem)
 ###dataset 
 
-city <- newyorkmerge
+city <- bostonmerge
 city$city <- 'Boston'
 
 city <- city %>%
